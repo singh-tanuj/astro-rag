@@ -1,4 +1,4 @@
-from sentence_transformers import SentenceTransformer
+from app.rag.model_store import get_model
 from qdrant_client.models import Filter, FieldCondition, MatchValue
 
 from app.rag.query_parser import parse_query
@@ -41,7 +41,7 @@ def qdrant_hybrid_retrieve(query: str, top_k: int = 3):
     house = parsed.get("house")
 
     client = get_qdrant_client()
-    model = SentenceTransformer(MODEL_NAME)
+    model = get_model()
 
     query_vector = model.encode(
         query,

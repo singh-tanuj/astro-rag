@@ -15,6 +15,9 @@ class QueryRequest(BaseModel):
 def root():
     return {"message": "Astro RAG API is running"}
 
+@app.get("/health")
+def health():
+    return {"status": "ok"}
 
 @app.post("/ask")
 @app.post("/ask")
