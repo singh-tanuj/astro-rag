@@ -1,5 +1,6 @@
 from app.rag.qdrant_hybrid_retriever import qdrant_hybrid_retrieve
 from app.guardrails.safety_filter import apply_safety_filter
+from app.rag.llm_generator import generate_llm_answer
 
 def generate_answer(query: str) -> dict:
     response = qdrant_hybrid_retrieve(query, top_k=3)
@@ -26,9 +27,11 @@ def generate_answer(query: str) -> dict:
             "metadata": metadata
         })
 
-    answer = (
-        f"Based on the retrieved Vedic astrology knowledge, {sources[0]['text']} "
-        "Final judgment depends on the full chart, dignity, aspects, sign placement, dasha, and overall context."
+    context = "\n\n".join([source["text"] for source in sources])
+
+    answer = generate_llm_answer(
+        query=query,
+        context=context
     )
 
     answer = apply_safety_filter(answer)
